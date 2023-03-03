@@ -28,6 +28,9 @@ install eslint
 3 instal config file: npm i @rocketseat/eslint-config
 
 comandos:
+1- rodar o lint (flag --fix no fim para ja corrigir)
  - npx eslint --ext .ts,.tsx src/
                extensoes     pasta
                
+
+Importante: Configurar o Prettier para nao ter conflito com o lint
