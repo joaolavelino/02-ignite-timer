@@ -1,0 +1,33 @@
+Install Styled Components
+
+npm i styled-components
+
+to use it alongside with typescript, we need to install the types:
+npm i @types/styled-components -d
+(-d : flag para determinar que é em ambiente de desenvolvimento)
+
+CRIAR THEMES
+criar a pasta dos themes: src>styles>themes
+criar um default.ts
+
+aplicar o ThemeProvider em volta do conteudo do App.tsx com o atributo theme, que vai carregar os temas criados no arquivo de tema
+
+para trocar o tema, é só criar uma função que troque esse tema
+
+
+
+
+PARA CRIAR TIPOS CUSTOMIZADOS
+
+criar pasta de tipos src>@types
+arquivos styled.d.ts (arquivos .d.ts são exclusivos para definições de tipos do TS. D = definitions)
+
+install eslint
+1 - install extension
+2 install dep - npm i eslint -d
+3 instal config file: npm i @rocketseat/eslint-config
+
+comandos:
+ - npx eslint --ext .ts,.tsx src/
+               extensoes     pasta
+               
