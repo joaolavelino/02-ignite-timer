@@ -34,3 +34,9 @@ comandos:
                
 
 Importante: Configurar o Prettier para nao ter conflito com o lint
+
+
+
+REACT HOOK FORM + ZOD
+install RHF and ZOD
+install integrator resolver = npm i @hookform/resolvers
