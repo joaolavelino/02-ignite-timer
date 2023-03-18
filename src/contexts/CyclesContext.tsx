@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useReducer } from 'react'
+import { createContext, ReactNode, useEffect, useReducer } from 'react'
 import { Cycle } from '../pages/Home/types'
 import {
   createNewCycleAction,
@@ -38,7 +38,26 @@ const initialState: CyclesState = {
 }
 
 export function CyclesContextProvider(props: CyclesContextProviderProps) {
-  const [cyclesState, dispatch] = useReducer(reducerFunction, initialState)
+  const [cyclesState, dispatch] = useReducer(
+    reducerFunction,
+    initialState,
+    () => {
+      const storedStateAsJSON = localStorage.getItem(
+        '@ignite-tymer:cyclesState-1.0.0'
+      )
+      if (storedStateAsJSON) {
+        return JSON.parse(storedStateAsJSON)
+      } else {
+        return initialState
+      }
+    }
+  )
+
+  //update local storage
+  useEffect(() => {
+    const cyclesJson = JSON.stringify(cyclesState)
+    localStorage.setItem('@ignite-tymer:cyclesState-1.0.0', cyclesJson)
+  }, [cyclesState])
 
   const { cycles, activeCycleId } = cyclesState
 
@@ -56,11 +75,11 @@ export function CyclesContextProvider(props: CyclesContextProviderProps) {
   }
 
   function interruptCycle() {
-    dispatch(finishCycleAction)
+    dispatch(interruptCycleAction())
   }
 
   function finishCycle() {
-    dispatch(interruptCycleAction)
+    dispatch(finishCycleAction())
   }
 
   return (

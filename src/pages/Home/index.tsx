@@ -35,6 +35,7 @@ export const Home: React.FC = () => {
 
   return (
     <HomeContainer>
+      <p>{activeCycle && activeCycle.taskName}</p>
       <form onSubmit={handleSubmit(handleCreateNewCycle)} action="">
         <FormProvider {...newCycleForm}>
           {!activeCycle ? (

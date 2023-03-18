@@ -16,28 +16,31 @@ export const reducerFunction = (state: CyclesState, action: any) => {
       })
       break
     case ActionTypes.FINISH_CURRENT_CYCLE:
-      // return {
-      //   ...state,
-      //   cycles: state.cycles.map((cycle) => {
-      //     if (cycle.id === state.activeCycleId) {
-      //       return { ...cycle, finishedDate: new Date() }
-      //     } else return cycle
-      //   }),
-      //   activeCycleId: null,
-      // }
       {
-        const currentCycleIndex = state.cycles.findIndex((cycle) => {
-          return cycle.id === state.activeCycleId
-        })
-        if (currentCycleIndex < 0) {
-          return state
+        console.log('finished action')
+        return {
+          ...state,
+          cycles: state.cycles.map((cycle) => {
+            if (cycle.id === state.activeCycleId) {
+              return { ...cycle, finishedDate: new Date() }
+            } else return cycle
+          }),
+          activeCycleId: null,
         }
-
-        return produce(state, (draft) => {
-          draft.activeCycleId = null
-          draft.cycles[currentCycleIndex].finishedDate = new Date()
-        })
       }
+      // {
+      //   const currentCycleIndex = state.cycles.findIndex((cycle) => {
+      //     return cycle.id === state.activeCycleId
+      //   })
+      //   if (currentCycleIndex < 0) {
+      //     return state
+      //   }
+
+      //   return produce(state, (draft) => {
+      //     draft.activeCycleId = null
+      //     draft.cycles[currentCycleIndex].finishedDate = new Date()
+      //   })
+      // }
       break
     case ActionTypes.INTERRUPT_CURRENT_CYCLE:
       // return {

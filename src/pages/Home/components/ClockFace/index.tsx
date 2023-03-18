@@ -4,9 +4,14 @@ import { CyclesContext } from '../../../../contexts/CyclesContext'
 import { ClockFaceContainer, Separator } from './styles'
 
 const ClockFace: React.FC = ({}) => {
-  const [elapsedSeconds, setElapsedSeconds] = useState(0)
-
   const { activeCycle, activeCycleId, finishCycle } = useContext(CyclesContext)
+
+  const [elapsedSeconds, setElapsedSeconds] = useState(() => {
+    if (activeCycle) {
+      return differenceInSeconds(new Date(), new Date(activeCycle.startedDate))
+    }
+    return 0
+  })
 
   const totalTaskSeconds = activeCycle ? activeCycle.minutesAmount * 60 : 0
   const currentSeconds = activeCycle ? totalTaskSeconds - elapsedSeconds : 0
@@ -23,7 +28,7 @@ const ClockFace: React.FC = ({}) => {
       interval = setInterval(() => {
         const secondDifferential = differenceInSeconds(
           new Date(),
-          activeCycle.startedDate
+          new Date(activeCycle.startedDate)
         )
 
         if (secondDifferential >= activeCycle.minutesAmount * 60) {

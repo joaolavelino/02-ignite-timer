@@ -36,7 +36,7 @@ const NewCycleForm: React.FC = () => {
         {...register('minutesAmount', { valueAsNumber: true })}
         step={5}
         max={30}
-        min={5}
+        min={1}
         disabled={!!activeCycle}
       />
       <span>minutes arbeiten</span>
