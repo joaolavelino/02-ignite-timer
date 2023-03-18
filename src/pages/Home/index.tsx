@@ -1,38 +1,26 @@
-import { Play } from 'phosphor-react'
-import React from 'react'
-import {
-  CountdownContainer,
-  FormContainer,
-  HomeContainer,
-  MinutesInput,
-  Separator,
-  StartCountdownButton,
-  TaskInput,
-} from './styles'
-import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import * as zod from 'zod'
-
-const newCycleFormValidationSchema = zod.object({
-  taskName: zod.string().min(1, 'Enter a task name'),
-  minutesAmount: zod
-    .number()
-    .min(5, 'The tesk must have at least 5 minutes')
-    .max(60, 'Max task lenght is 60 minutes'),
-})
-
-// interface NewCycleFormData {
-//   taskName: string
-//   minutesAmount: number
-// }
-
-type NewCycleFormData = zod.infer<typeof newCycleFormValidationSchema>
+import { HandPalm, Play } from 'phosphor-react'
+import React, { useContext } from 'react'
+import { FormProvider, useForm } from 'react-hook-form'
+import { CyclesContext } from '../../contexts/CyclesContext'
+import ClockFace from './components/ClockFace'
+import NewCycleForm, { NewCycleFormData } from './components/NewCycleForm'
+import { newCycleFormValidationSchema } from './components/NewCycleForm/validation'
+import {
+  HomeContainer,
+  StartCountdownButton,
+  StopCountdownButton,
+} from './styles'
+import { Cycle } from './types'
 
 export const Home: React.FC = () => {
-  const { register, handleSubmit, reset, watch } = useForm<NewCycleFormData>({
+  const newCycleForm = useForm<NewCycleFormData>({
     resolver: zodResolver(newCycleFormValidationSchema),
     defaultValues: { taskName: '', minutesAmount: 0 },
   })
+
+  const { handleSubmit, reset, watch } = newCycleForm
+  const { activeCycle, createCycle, interruptCycle } = useContext(CyclesContext)
 
   const taskName = watch('taskName')
 
@@ -40,53 +28,31 @@ export const Home: React.FC = () => {
     return !taskName
   }
 
-  const handleCreateNewCycle = (data: NewCycleFormData) => {
-    console.log(data)
+  function handleCreateNewCycle(data: NewCycleFormData) {
+    createCycle(data)
     reset()
   }
 
   return (
     <HomeContainer>
       <form onSubmit={handleSubmit(handleCreateNewCycle)} action="">
-        <FormContainer>
-          <label htmlFor="task">{`I'm working on`}</label>
-          <TaskInput
-            type="text"
-            id="task"
-            placeholder="insert task name"
-            list="task-suggestions"
-            {...register('taskName')}
-          />
-          <datalist id="task-suggestions">
-            <option value="Projeto 1" />
-            <option value="Projeto 2" />
-            <option value="Projeto 3" />
-            <option value="Projeto 4" />
-          </datalist>
-          <label htmlFor="minutesAmount">{`for`}</label>
-          <MinutesInput
-            type="number"
-            id="minutesAmount"
-            placeholder="00"
-            {...register('minutesAmount', { valueAsNumber: true })}
-            step={5}
-            max={30}
-            min={5}
-          />
-          <span>minutes</span>
-        </FormContainer>
-
-        <CountdownContainer>
-          <span>0</span>
-          <span>0</span>
-          <Separator>:</Separator>
-          <span>0</span>
-          <span>0</span>
-        </CountdownContainer>
-
-        <StartCountdownButton type="submit" disabled={isSubmitDisabled()}>
-          <Play weight="bold" height={24} /> Start
-        </StartCountdownButton>
+        <FormProvider {...newCycleForm}>
+          {!activeCycle ? (
+            <NewCycleForm />
+          ) : (
+            <h3>Sie arbeiten gerade an {activeCycle.taskName}</h3>
+          )}
+        </FormProvider>
+        <ClockFace />
+        {activeCycle ? (
+          <StopCountdownButton onClick={interruptCycle} type="button">
+            <HandPalm weight="bold" height={24} /> Unterbrechen
+          </StopCountdownButton>
+        ) : (
+          <StartCountdownButton type="submit" disabled={isSubmitDisabled()}>
+            <Play weight="bold" height={24} /> Start
+          </StartCountdownButton>
+        )}
       </form>
     </HomeContainer>
   )
